@@ -1,0 +1,176 @@
+/* KC Bra - Modern Boutique Design System & UI Overrides */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+*, ::before, ::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: #090d16;
+    color: #f1f5f9;
+}
+
+/* Fallback SVG Constraint Safety */
+svg {
+    max-width: 100%;
+}
+
+/* Light Mode Theme Overrides */
+html.light {
+    background-color: #f8fafc !important;
+    color: #0f172a !important;
+}
+
+html.light body {
+    background-color: #f8fafc !important;
+    color: #0f172a !important;
+}
+
+html.light header {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border-color: #e2e8f0 !important;
+}
+
+html.light main {
+    background-color: #f8fafc !important;
+}
+
+html.light .bg-slate-900,
+html.light .bg-slate-900\/90,
+html.light .bg-slate-900\/80,
+html.light .bg-slate-950,
+html.light .bg-slate-950\/90,
+html.light .bg-slate-950\/80,
+html.light .bg-slate-950\/60,
+html.light .bg-slate-950\/40 {
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+    border-color: #e2e8f0 !important;
+}
+
+html.light .text-slate-100,
+html.light .text-slate-200 {
+    color: #0f172a !important;
+}
+
+html.light .text-slate-300,
+html.light .text-slate-400 {
+    color: #475569 !important;
+}
+
+html.light .border-slate-800,
+html.light .border-slate-800\/90,
+html.light .border-slate-800\/80,
+html.light .border-slate-800\/60 {
+    border-color: #cbd5e1 !important;
+}
+
+html.light input,
+html.light select,
+html.light textarea {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+    border-color: #cbd5e1 !important;
+}
+
+/* Active Nav Button */
+.nav-btn.active {
+    background: linear-gradient(135deg, rgba(244, 63, 94, 0.18), rgba(244, 63, 94, 0.08));
+    color: #fb7185 !important;
+    border: 1px solid rgba(244, 63, 94, 0.4);
+    font-weight: 700;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.6);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(51, 65, 85, 0.8);
+    border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(244, 63, 94, 0.7);
+}
+
+/* Stock Input Focus */
+.stock-input-focus:focus {
+    outline: none;
+    border-color: #f43f5e !important;
+    box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.3) !important;
+    background-color: #1e1b4b !important;
+}
+
+/* Tab View Fade In */
+.tab-view {
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.tab-view.hidden {
+    display: none !important;
+    opacity: 0;
+    transform: translateY(4px);
+}
+
+.tab-view.active {
+    display: flex !important;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Thermal Receipt Paper Styling */
+.receipt-paper {
+    background: #ffffff;
+    color: #111827;
+    font-family: 'Courier New', Courier, monospace;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #printable-receipt-area, #printable-receipt-area * {
+        visibility: visible;
+    }
+    #printable-receipt-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0 auto;
+        padding: 15px;
+        background: white !important;
+        color: black !important;
+    }
+    #printable-receipt-area.retail-mode {
+        width: 80mm !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+}

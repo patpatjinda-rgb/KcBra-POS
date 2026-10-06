@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KC Bra / KCP&P Shop - ระบบหน้าร้าน POS & จัดการสต็อกสินค้า</title>
+
+    <!-- Tailwind CSS Engine -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            850: '#151e2e',
+                            900: '#0f172a',
+                            950: '#090d16'
+                        },
+                        rose: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                            800: '#9f1239',
+                            900: '#881337',
+                            950: '#4c0519',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- SheetJS (XLSX) CDN for Excel Export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+    <!-- Canvas Confetti for Sale celebration -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    
+    <!-- Custom Design System CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-slate-950 text-slate-100 antialiased font-sans selection:bg-rose-500 selection:text-white min-h-screen flex flex-col">
+
+    <!-- App Header & Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-xl border-b border-slate-800/80 px-4 lg:px-8 py-3 transition-colors shadow-lg">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            
+            <!-- Brand Logo & Store Badge -->
+            <div class="flex items-center gap-3">
+                <img src="assets/logo.png" alt="KC Bra Logo" class="h-11 w-auto object-contain rounded-xl border border-slate-800 shadow-xl shadow-rose-950/40 p-0.5 bg-black">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="font-serif font-bold text-xl tracking-tight text-slate-100">KC Bra / KCP&P Shop</h1>
+                        <span class="px-2.5 py-0.5 text-[10px] font-extrabold bg-gradient-to-r from-rose-500/20 to-amber-500/20 text-rose-300 border border-rose-500/30 rounded-full shadow-inner">BOUTIQUE POS</span>
+                    </div>
+                    <p class="text-xs text-slate-400 hidden sm:block font-medium">ระบบหน้าร้านและจัดการสต็อกสินค้า KC Bra / KCP&P Shop</p>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <nav class="flex items-center gap-1.5 bg-slate-950/80 p-1.5 rounded-2xl border border-slate-800/80 text-sm font-semibold shadow-inner">
+                <button id="nav-pos" onclick="app.switchTab('pos')" class="nav-btn active flex items-center gap-2 px-4 py-2 rounded-xl transition-all text-slate-400 hover:text-slate-200">
+                    <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                    <span>หน้าร้าน (POS)</span>
+                </button>
+                <button id="nav-dashboard" onclick="app.switchTab('dashboard')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-xl transition-all text-slate-400 hover:text-slate-200">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                    <span class="hidden md:inline">แดชบอร์ด</span>
+                    <span class="md:hidden">Stats</span>
+                </button>
+                <button id="nav-products" onclick="app.switchTab('products')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-xl transition-all text-slate-400 hover:text-slate-200">
+                    <i data-lucide="package" class="w-4 h-4"></i>
+                    <span>คลังสินค้า</span>
+                </button>
+                <button id="nav-customers" onclick="app.switchTab('customers')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-xl transition-all text-slate-400 hover:text-slate-200">
+                    <i data-lucide="users" class="w-4 h-4"></i>
+                    <span class="hidden md:inline">ลูกค้า (CRM)</span>
+                </button>
+                <button id="nav-reports" onclick="app.switchTab('reports')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-xl transition-all text-slate-400 hover:text-slate-200">
+                    <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                    <span class="hidden md:inline">รายงานยอดขาย</span>
+                </button>
+            </nav>
+
+            <!-- Actions & Theme Switcher -->
+            <div class="flex items-center gap-2">
+                <button onclick="app.toggleTheme()" title="เปลี่ยนธีม สว่าง/มืด" class="p-2.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-xl transition-all border border-slate-800 hover:border-slate-700">
+                    <i data-lucide="sun" id="theme-icon" class="w-5 h-5"></i>
+                </button>
+                <button onclick="app.resetSeedData()" title="รีเซ็ตแคตตาล็อกสินค้าเริ่มต้นจาก Google Sheet" class="hidden lg:flex items-center gap-1.5 px-3 py-2 text-xs text-rose-300 hover:text-rose-100 bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/40 rounded-xl transition-all font-semibold">
+                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                    <span>รีเซ็ตแคตตาล็อก</span>
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-6 flex flex-col gap-6">
+        
+        <!-- POS View -->
+        <section id="view-pos" class="tab-view active flex flex-col gap-4">
+            <!-- Rendered dynamically by js/components/pos.js -->
+        </section>
+
+        <!-- Dashboard View -->
+        <section id="view-dashboard" class="tab-view hidden flex flex-col gap-6">
+            <!-- Rendered dynamically by js/components/dashboard.js -->
+        </section>
+
+        <!-- Products View -->
+        <section id="view-products" class="tab-view hidden flex flex-col gap-4">
+            <!-- Rendered dynamically by js/components/products.js -->
+        </section>
+
+        <!-- Customers View -->
+        <section id="view-customers" class="tab-view hidden flex flex-col gap-4">
+            <!-- Rendered dynamically by js/components/customers.js -->
+        </section>
+
+        <!-- Reports View -->
+        <section id="view-reports" class="tab-view hidden flex flex-col gap-6">
+            <!-- Rendered dynamically by js/components/reports.js -->
+        </section>
+
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="mt-auto border-t border-slate-800/60 bg-slate-950 py-4 px-4 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+            <span>&copy; 2026 KC Bra / KCP&P Shop POS System &bull; อ้างอิงแคตตาล็อกสินค้าจาก Google Sheet</span>
+            <span class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>สถานะฐานข้อมูล: เชื่อมต่อสมบูรณ์ (IndexedDB / LocalStorage)</span>
+            </span>
+        </div>
+    </footer>
+
+    <!-- Modals Container -->
+    <div id="modal-container"></div>
+
+    <!-- Application JavaScript Bundles -->
+    <script src="js/seed.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/exporter.js"></script>
+    <script src="js/components/customerModal.js"></script>
+    <script src="js/components/pos.js"></script>
+    <script src="js/components/products.js"></script>
+    <script src="js/components/customers.js"></script>
+    <script src="js/components/reports.js"></script>
+    <script src="js/components/dashboard.js"></script>
+    <script src="js/app.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>
